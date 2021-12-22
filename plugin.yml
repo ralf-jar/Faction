@@ -1,0 +1,33 @@
+name: Faction
+main: com.sa.factions.Main
+version: 1.0
+authors:
+  - Sob3rbia
+api-version: 1.18
+commands:
+  login:
+   description: Inicia sesion en el servidor.
+  register:
+   description: Registrate en el servidor.
+  factionadd:
+   description: Crea y unete a una faccion.
+  factioncolor:
+   description: Cambia el color de tu faccion.
+  factionrename:
+   description: Cambia el nombre de tu faccion.
+  factiondel:
+   description: Elimina la faccion que creaste.
+  factionjoin:
+   description: Acepta la invitacion a una faccion.
+  factioninvite:
+   description: Invita a un jugador en linea a la faccion.
+  factionkick:
+   description: Expulsa a un miembro de tu faccion.
+  factionleave:
+   description: Abandona la faccion de la que eres miembro.
+  factionleader:
+   description: Sede el liderazgo de tu faccion a un companero de faccion.
+  factionlist:
+   description: Visualiza todas las facciones por orden de nivel de poder.
+  factionmembers:
+   description: Visualiza los miembros de tu faccion u otra.
