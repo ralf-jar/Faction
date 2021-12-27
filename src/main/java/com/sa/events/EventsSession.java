@@ -33,7 +33,6 @@ import com.sa.faccion.Chat;
 import com.sa.faccion.Main;
 
 import net.kyori.adventure.text.Component;
-
 import io.papermc.paper.event.player.AsyncChatEvent;
 
 public class EventsSession implements Listener {
@@ -54,9 +53,9 @@ public class EventsSession implements Listener {
     public void onPlayerChat(AsyncChatEvent e)
     {
 		if(playersOnLogin.get(e.getPlayer().getUniqueId().toString()) != null) {
-			Chat.recept("&cInicie sesión para utilizar el chat.", e.getPlayer());	
+			Chat.recept(messages.get("RSSL05"), e.getPlayer());	
 		}else {
-			Chat.msg(e.message().toString(), e.getPlayer());
+			Chat.msg(e.message(), e.getPlayer());
 		}
 		
 		e.setCancelled(true);
@@ -129,6 +128,7 @@ public class EventsSession implements Listener {
 	    	event.setCancelled(true);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent e) 
 	{
@@ -191,7 +191,14 @@ public class EventsSession implements Listener {
 							if(player.getUuidFaction() != null) {
 								FactionObject faction = new FactionObject();
 								faction.getFaction(player.getUuidFaction());
-								e.getPlayer().displayName(Component.text(Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", e.getPlayer().getName())));
+								
+								String chat = Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", e.getPlayer().getName());
+								
+								if(Main.isPaper()) {
+									e.getPlayer().displayName(Component.text(chat));			
+								}else {
+									e.getPlayer().setDisplayName(chat);
+								}
 							}
 							
 						}else {

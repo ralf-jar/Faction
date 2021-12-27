@@ -25,6 +25,7 @@ import com.sa.entitys.PlayerObject;
 import com.sa.faccion.Main;
 import com.sa.faccion.Chat;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 
 public class EventsPeaceAgreement implements Listener {
@@ -43,7 +44,8 @@ public class EventsPeaceAgreement implements Listener {
 	
 	public void timer(Main main){
         main.getServer().getScheduler().runTaskTimer(main, new Runnable(){
-            public void run(){
+            @SuppressWarnings("deprecation")
+			public void run(){
             	for(int i = peaceAgreements.size()-1; i != -1; i--) {
             		
             		Player playerTarget = Bukkit.getPlayer(UUID.fromString(peaceAgreements.get(i).getPlayerKillerUUID()));
@@ -52,16 +54,24 @@ public class EventsPeaceAgreement implements Listener {
             		if(peaceAgreements.get(i).isActive()) {
             			if(playerWithCompass.isOnline()) {
         					for(int l = 0; playerWithCompass.getInventory().getSize() < l; l++) {
+        						
+        						String displayName = "";
+        						if(Main.isPaper()) {
+        							displayName = PlainTextComponentSerializer.plainText().serialize(playerWithCompass.getInventory().getItem(l).getItemMeta().displayName());
+        						}else {
+        							displayName = playerWithCompass.getInventory().getItem(l).getItemMeta().getDisplayName();
+        						}
+        						
         						if(playerWithCompass.getInventory().getItem(l) != null 
         								&& playerWithCompass.getInventory().getItem(l).getType() == Material.COMPASS 
-        								&& playerWithCompass.getInventory().getItem(l).getItemMeta().displayName().toString().startsWith(ChatColor.RED+"")) {
+        								&& displayName.startsWith(ChatColor.RED+"")) {
         								
     								CompassMeta compassMeta = (CompassMeta) playerWithCompass.getInventory().getItem(l).getItemMeta();
     		        				Location locationLodestone = compassMeta.getLodestone();
     		        				Bukkit.getWorld(playerTarget.getWorld().getUID()).setBlockData(locationLodestone, Bukkit.createBlockData(Material.BEDROCK));
     		        				
     		        				Location newLocation = playerTarget.getLocation();
-    		        				newLocation.setY(0);
+    		        				newLocation.setY(-59);
     		        				compassMeta.setLodestone(newLocation);
     		        				playerWithCompass.getInventory().getItem(l).setItemMeta(compassMeta);
     		        				Bukkit.getWorld(playerTarget.getWorld().getUID()).setBlockData(newLocation, Bukkit.createBlockData(Material.LODESTONE));			
@@ -113,11 +123,19 @@ public class EventsPeaceAgreement implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent event){
 		String uuid = event.getPlayer().getUniqueId().toString();
 		if(players.get(uuid) != null) {
-			if(event.getItemDrop().getItemStack().getType() == Material.COMPASS && event.getItemDrop().getItemStack().getItemMeta().displayName().toString().startsWith(ChatColor.RED + "")) {
+			String displayName = "";
+			if(Main.isPaper()) {
+				displayName = PlainTextComponentSerializer.plainText().serialize(event.getItemDrop().getItemStack().getItemMeta().displayName());
+			}else {
+				displayName = event.getItemDrop().getItemStack().getItemMeta().getDisplayName();
+			}
+			
+			if(event.getItemDrop().getItemStack().getType() == Material.COMPASS && displayName.startsWith(ChatColor.RED + "")) {
 				Chat.recept(messages.get("RPAD01"), event.getPlayer());
 			}
 		}
@@ -130,7 +148,7 @@ public class EventsPeaceAgreement implements Listener {
 			if(e.getMessage().toLowerCase().equals("/revenge off")) {
 				for(int i = 0; i < e.getPlayer().getInventory().getContents().length; i++) {
 					ItemStack item = e.getPlayer().getInventory().getContents()[i];
-					if(item != null && item.getType() == Material.COMPASS && item.getItemMeta().displayName().toString().startsWith(ChatColor.RED + "")) {
+					if(item != null && item.getType() == Material.COMPASS && PlainTextComponentSerializer.plainText().serialize(item.getItemMeta().displayName()).startsWith(ChatColor.RED + "")) {
 						e.getPlayer().getInventory().remove(item);
 						break;
 					}
@@ -152,7 +170,7 @@ public class EventsPeaceAgreement implements Listener {
 				Player playerTarget = Bukkit.getPlayer(UUID.fromString(uuidPlayerTarget));
 				
 				Location location = playerTarget.getLocation();
-				location.setY(0);
+				location.setY(-59);
 				Bukkit.getWorld(playerTarget.getWorld().getUID()).setBlockData(location, Bukkit.createBlockData(Material.LODESTONE));
 				
 				ItemStack item = Main.getItem(Material.COMPASS, ChatColor.RED + "" + playerTarget.getName());

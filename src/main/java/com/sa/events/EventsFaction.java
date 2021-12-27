@@ -1,4 +1,3 @@
-
 package com.sa.events;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ import com.sa.faccion.Chat;
 import com.sa.faccion.Main;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public class EventsFaction implements Listener {
 	
@@ -72,6 +72,7 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void factionAdd(String factionName, String uuidPlayer) {
 		Player p = Bukkit.getPlayer(UUID.fromString(uuidPlayer));
 		if(players.get(uuidPlayer).getUuidFaction() == null) {
@@ -85,7 +86,13 @@ public class EventsFaction implements Listener {
 					players.get(p.getUniqueId().toString()).setUuidFaction(faction.getUuid());
 					players.get(p.getUniqueId().toString()).setFactionOwner(true);
 					String factionNameColor = faction.getName().replace("@color", faction.getColorPrefix()).replace("@player", p.getName());
-					p.displayName(Component.text(Chat.styleDisplayName.replace("@faction", factionNameColor)));
+					String formatName = Chat.styleDisplayName.replace("@faction", factionNameColor);
+					if(Main.isPaper()) {
+						p.displayName(Component.text(formatName));	
+					}else {
+						p.setDisplayName(formatName);
+					}
+					
 					Chat.recept(messages.get("RFTC01").replace("@faction", factionName), p);
 					
 					Chat.recept(messages.get("RFTC02"), p);
@@ -100,6 +107,7 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void factionRename(String factionRename, String uuidPlayer) {
 		Player player = Bukkit.getPlayer(UUID.fromString(uuidPlayer));
 		String uuidFaction = players.get(uuidPlayer).getUuidFaction();
@@ -124,7 +132,14 @@ public class EventsFaction implements Listener {
 						for(String uuidMember : members) {
 							Player p = Bukkit.getPlayer(UUID.fromString(uuidMember));
 							if(p.isOnline()) {
-								p.displayName(Component.text(Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", p.getName())));
+								String displayName = Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", p.getName());
+								
+								if(Main.isPaper()) {
+									p.displayName(Component.text(displayName));	
+								}else {
+									p.setDisplayName(displayName);
+								}
+								
 								Chat.recept(messages.get("RFTR01"), p);
 							}
 						}
@@ -142,6 +157,7 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void factionDel(String uuidPlayer, String passwordEncrypt) {
 		String uuidFaction = players.get(uuidPlayer).getUuidFaction();
 		Player player = Bukkit.getPlayer(UUID.fromString(uuidPlayer)); 
@@ -161,7 +177,11 @@ public class EventsFaction implements Listener {
 								
 								if(p.isOnline()) {
 									players.get(uuidMember).setUuidFaction(null);
-									p.displayName(Component.text(p.getName()));
+									if(Main.isPaper()) {
+										p.displayName(Component.text(p.getName()));
+									}else {
+										p.setDisplayName(p.getName());
+									}
 									
 									if(!uuidPlayer.equals(uuidMember)) {
 										Chat.recept(messages.get("RFTD01").replace("@player", player.getName()), p);
@@ -186,6 +206,7 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void factionLeave(String uuidPlayer, String passwordEncrypt) {
 		String uuidFaction = players.get(uuidPlayer).getUuidFaction();
 		Player player = Bukkit.getPlayer(UUID.fromString(uuidPlayer)); 
@@ -202,8 +223,11 @@ public class EventsFaction implements Listener {
 						if(players.get(uuidPlayer).putPlayer(PlayerValues.uuidFaction)) {
 							
 							factions.get(uuidFaction).setMembersUuid(FactionObject.getMembersUuid(uuidFaction));
-							player.displayName(Component.text(player.getName()));
-							
+							if(Main.isPaper()) {
+								player.displayName(Component.text(player.getName()));	
+							}else {
+								player.setDisplayName(player.getName());
+							}
 							Player p = Bukkit.getPlayer(UUID.fromString(factions.get(uuidFaction).getUuidPlayerOwner()));
 							if(p.isOnline()) {
 								Chat.recept(messages.get("RFTL00").replace("@player", player.getName()), p);
@@ -255,7 +279,9 @@ public class EventsFaction implements Listener {
 				PlayerObject playerInvitedObj = new PlayerObject();
 				playerInvitedObj.getPlayer(uuidPlayerInvited);
 				
-				if(FactionObject.getMembersUuid(faction.getUuid()).size() <= Main.maxMembers) {
+				int maxMembers = Integer.parseInt(parameters.get("maxmembers"));
+				
+				if(FactionObject.getMembersUuid(faction.getUuid()).size() <= maxMembers) {
 					if(playerInvitedObj.getUuidFaction() == null) {
 						
 						if(invitations.get(uuidPlayerInvited) == null) {
@@ -281,21 +307,28 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void factionJoin(String uuidPlayer) {
 		try {
-			
+			int maxMembers = Integer.parseInt(parameters.get("maxmembers"));
 			Player player = Bukkit.getPlayer(UUID.fromString(uuidPlayer));
 			
 			if(invitations.get(uuidPlayer) != null) {
 				String uuidFaction = players.get(invitations.get(uuidPlayer)).getUuidFaction();
 				if(uuidFaction != null) {
 					List<String> members = FactionObject.getMembersUuid(uuidFaction);
-					if(members.size() < Main.maxMembers) {
+					if(members.size() < maxMembers) {
 						
 						players.get(uuidPlayer).setUuidFaction(uuidFaction);
 						if(players.get(uuidPlayer).putPlayer(PlayerValues.uuidFaction)) {
 							
-							player.displayName(Component.text(Chat.styleDisplayName.replace("@faction", factions.get(uuidFaction).getName()).replace("@color", factions.get(uuidFaction).getColorPrefix()).replace("@player", player.getName())));
+							String displayName = Chat.styleDisplayName.replace("@faction", factions.get(uuidFaction).getName()).replace("@color", factions.get(uuidFaction).getColorPrefix()).replace("@player", player.getName());
+							if(Main.isPaper()) {
+								player.displayName(Component.text(displayName));	
+							}else {
+								player.setDisplayName(displayName);
+							}
+							
 							Chat.recept(messages.get("RFTJ01").replace("@faction", factions.get(uuidFaction).getName()), player);
 							for(String member : members) {
 								Player playerMember = Bukkit.getPlayer(UUID.fromString(member));
@@ -324,6 +357,7 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void factionKick(String uuidPlayer, String playerNameKicked) {
 		try {
 			Player playerOwner = Bukkit.getPlayer(UUID.fromString(uuidPlayer));
@@ -338,7 +372,12 @@ public class EventsFaction implements Listener {
 					players.get(uuidPlayerKicked).setUuidFaction("");
 					if(players.get(uuidPlayerKicked).putPlayer(PlayerValues.uuidFaction)) {	
 						factions.get(uuidFaction).setMembersUuid(FactionObject.getMembersUuid(uuidFaction));
-						playerKicked.displayName(Component.text(playerKicked.getName()));
+						if(Main.isPaper()) {
+							playerKicked.displayName(Component.text(playerKicked.getName()));	
+						}else {
+							playerKicked.setDisplayName(playerKicked.getName());
+						}
+						
 						Chat.recept(messages.get("RFTK01").replace("@player", playerKicked.getName()), playerOwner);
 						Chat.recept(messages.get("RFTK02").replace("@player", playerOwner.getName()), playerKicked);
 					}else {
@@ -513,13 +552,22 @@ public class EventsFaction implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerClickInventory(InventoryClickEvent e){
 		if(e.getView().title().toString().equals(titleMenu)) {
 			if(e.getCurrentItem() != null && e.getCurrentItem().getType().name().contains("WOOL")) {
 				String uuid = e.getWhoClicked().getUniqueId().toString();
-				String color = e.getCurrentItem().getItemMeta().displayName().toString().charAt(1)+"";
+				
+				String color = "";
+				if(Main.isPaper()) {
+					color = PlainTextComponentSerializer.plainText().serialize(e.getCurrentItem().getItemMeta().displayName()).charAt(1)+"";
+				}else {
+					color = e.getCurrentItem().getItemMeta().getDisplayName().charAt(1) + "";
+				}
+
 				factions.get(players.get(uuid).getUuidFaction()).setColorPrefix(color);
+				
 				FactionObject faction = factions.get(players.get(uuid).getUuidFaction());
 				Player p = (Player) e.getWhoClicked();
 				p.displayName(Component.text( Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", p.getName())));
@@ -528,7 +576,13 @@ public class EventsFaction implements Listener {
 				for(String uuidMember : members) {
 					Player member = Bukkit.getPlayer(UUID.fromString(uuidMember));
 					if(member.isOnline()) {
-						member.displayName(Component.text(Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", member.getName())));
+						String displayName = Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", member.getName());
+						if(Main.isPaper()) {
+							member.displayName(Component.text(displayName));
+
+						}else {
+							member.setDisplayName(displayName);
+						}
 						Chat.recept(messages.get("RFTO03").replace("@color", color), p);
 					}
 				}

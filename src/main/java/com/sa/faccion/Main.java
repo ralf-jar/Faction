@@ -25,8 +25,6 @@ public class Main extends JavaPlugin{
 	private HashMap<String, String> parameters;
 	private HashMap<String, String> messages;
 	
-	public static int maxMembers = 3;
-	
 	@Override
 	public void onEnable() {
 		parameters = ParameterObject.get();
@@ -70,12 +68,30 @@ public class Main extends JavaPlugin{
 		return str == null || str.replace(" ", "").length() == 0;
 	}
 	
+	@SuppressWarnings("deprecation") 
 	public static ItemStack getItem(Material material, String name) {
 		ItemStack item = new ItemStack(material, 1);
 		ItemMeta meta = item.getItemMeta();
-		meta.displayName(Component.text(name.replace("&", "§")));
+		if(Main.isPaper()) {
+			meta.displayName(Component.text(name.replace("&", "§")));	
+		}else {
+			meta.setDisplayName(name.replace("&", "§"));
+		}
+		
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	public static boolean isPaper() {
+		boolean isPaper = false;
+		try {
+		    Class.forName("com.destroystokyo.paper.ParticleBuilder");
+		    isPaper = true;
+		} catch (ClassNotFoundException ignored) {
+			
+		}
+		
+		return isPaper;
 	}
 	
 }
