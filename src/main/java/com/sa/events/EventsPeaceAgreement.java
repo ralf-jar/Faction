@@ -25,26 +25,24 @@ import com.sa.entitys.PlayerObject;
 import com.sa.faccion.Main;
 import com.sa.faccion.Chat;
 
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
-
 public class EventsPeaceAgreement implements Listener {
 	private HashMap<String, PlayerObject> players;
 	private ArrayList<PeaceAgreementObject> peaceAgreements;
 	private HashMap<String, String> parameters;
 	private HashMap<String, String> messages;
+	private String rojo = "";
 	
 	public EventsPeaceAgreement(HashMap<String, PlayerObject> players, HashMap<String, String> parameters, HashMap<String, String> messages, Main main) {
 		setPlayers(players);
 		peaceAgreements = new ArrayList<PeaceAgreementObject>();
 		this.parameters = parameters;
 		this.messages = messages; 
+		rojo = net.md_5.bungee.api.ChatColor.RED + "";
 		timer(main);
 	}
 	
 	public void timer(Main main){
         main.getServer().getScheduler().runTaskTimer(main, new Runnable(){
-            @SuppressWarnings("deprecation")
 			public void run(){
             	for(int i = peaceAgreements.size()-1; i != -1; i--) {
             		
@@ -56,15 +54,11 @@ public class EventsPeaceAgreement implements Listener {
         					for(int l = 0; playerWithCompass.getInventory().getSize() < l; l++) {
         						
         						String displayName = "";
-        						if(Main.isPaper()) {
-        							displayName = PlainTextComponentSerializer.plainText().serialize(playerWithCompass.getInventory().getItem(l).getItemMeta().displayName());
-        						}else {
-        							displayName = playerWithCompass.getInventory().getItem(l).getItemMeta().getDisplayName();
-        						}
+        						displayName = playerWithCompass.getInventory().getItem(l).getItemMeta().getDisplayName();
         						
         						if(playerWithCompass.getInventory().getItem(l) != null 
         								&& playerWithCompass.getInventory().getItem(l).getType() == Material.COMPASS 
-        								&& displayName.startsWith(ChatColor.RED+"")) {
+        								&& displayName.startsWith(rojo)) {
         								
     								CompassMeta compassMeta = (CompassMeta) playerWithCompass.getInventory().getItem(l).getItemMeta();
     		        				Location locationLodestone = compassMeta.getLodestone();
@@ -123,19 +117,14 @@ public class EventsPeaceAgreement implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent event){
 		String uuid = event.getPlayer().getUniqueId().toString();
 		if(players.get(uuid) != null) {
 			String displayName = "";
-			if(Main.isPaper()) {
-				displayName = PlainTextComponentSerializer.plainText().serialize(event.getItemDrop().getItemStack().getItemMeta().displayName());
-			}else {
-				displayName = event.getItemDrop().getItemStack().getItemMeta().getDisplayName();
-			}
+			displayName = event.getItemDrop().getItemStack().getItemMeta().getDisplayName();
 			
-			if(event.getItemDrop().getItemStack().getType() == Material.COMPASS && displayName.startsWith(ChatColor.RED + "")) {
+			if(event.getItemDrop().getItemStack().getType() == Material.COMPASS && displayName.startsWith(rojo)) {
 				Chat.recept(messages.get("RPAD01"), event.getPlayer());
 			}
 		}
@@ -148,7 +137,9 @@ public class EventsPeaceAgreement implements Listener {
 			if(e.getMessage().toLowerCase().equals("/revenge off")) {
 				for(int i = 0; i < e.getPlayer().getInventory().getContents().length; i++) {
 					ItemStack item = e.getPlayer().getInventory().getContents()[i];
-					if(item != null && item.getType() == Material.COMPASS && PlainTextComponentSerializer.plainText().serialize(item.getItemMeta().displayName()).startsWith(ChatColor.RED + "")) {
+					if(item != null 
+							&& item.getType() == Material.COMPASS 
+							&& item.getItemMeta().getDisplayName().startsWith(rojo)) {
 						e.getPlayer().getInventory().remove(item);
 						break;
 					}
@@ -173,7 +164,7 @@ public class EventsPeaceAgreement implements Listener {
 				location.setY(-59);
 				Bukkit.getWorld(playerTarget.getWorld().getUID()).setBlockData(location, Bukkit.createBlockData(Material.LODESTONE));
 				
-				ItemStack item = Main.getItem(Material.COMPASS, ChatColor.RED + "" + playerTarget.getName());
+				ItemStack item = Main.getItem(Material.COMPASS, rojo + "" + playerTarget.getName());
 				CompassMeta compassMeta = (CompassMeta)item.getItemMeta();
 				compassMeta.setLodestone(location);
 				item.setItemMeta(compassMeta);

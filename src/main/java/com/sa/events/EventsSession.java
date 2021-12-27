@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEditBookEvent;
@@ -32,9 +33,6 @@ import com.sa.entitys.PlayerValues;
 import com.sa.faccion.Chat;
 import com.sa.faccion.Main;
 
-import net.kyori.adventure.text.Component;
-import io.papermc.paper.event.player.AsyncChatEvent;
-
 public class EventsSession implements Listener {
 	
 	private HashMap<String, PlayerObject> players;
@@ -50,16 +48,16 @@ public class EventsSession implements Listener {
 	}
 	
 	@EventHandler
-    public void onPlayerChat(AsyncChatEvent e)
-    {
+	public void onPlayerChat(AsyncPlayerChatEvent e) {
 		if(playersOnLogin.get(e.getPlayer().getUniqueId().toString()) != null) {
 			Chat.recept(messages.get("RSSL05"), e.getPlayer());	
 		}else {
-			Chat.msg(e.message(), e.getPlayer());
+			Chat.msg(e.getMessage(), e.getPlayer());
 		}
 		
 		e.setCancelled(true);
-    }	
+	}
+	
 	
 	@EventHandler
 	public void onPlayerBreakItem(BlockBreakEvent e) {
@@ -128,7 +126,6 @@ public class EventsSession implements Listener {
 	    	event.setCancelled(true);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent e) 
 	{
@@ -193,12 +190,7 @@ public class EventsSession implements Listener {
 								faction.getFaction(player.getUuidFaction());
 								
 								String chat = Chat.styleDisplayName.replace("@faction", faction.getName()).replace("@color", faction.getColorPrefix()).replace("@player", e.getPlayer().getName());
-								
-								if(Main.isPaper()) {
-									e.getPlayer().displayName(Component.text(chat));			
-								}else {
-									e.getPlayer().setDisplayName(chat);
-								}
+								e.getPlayer().setDisplayName(chat);
 							}
 							
 						}else {
@@ -224,8 +216,7 @@ public class EventsSession implements Listener {
 			String uuid = e.getPlayer().getUniqueId().toString();
 			PlayerObject player = new PlayerObject();
 			playersOnLogin.put(uuid, player);
-			e.joinMessage(Component.text(""));
-			
+			e.setJoinMessage("");
 			if(player.getPlayer(uuid)) {
 				Chat.recept(messages.get("RSSL01").replace("@player", e.getPlayer().getName()), e.getPlayer());
 				Chat.recept(messages.get("RSSL03"), e.getPlayer());
@@ -252,7 +243,8 @@ public class EventsSession implements Listener {
 			
 			players.remove(player.getUuid());
 			Chat.msg(messages.get("GSSL02").replace("@player", e.getPlayer().getName()));
-			e.quitMessage(Component.text(""));
+			e.setQuitMessage("");
+			
 		}else {
 			e.getPlayer().getInventory().setContents(inventorysOnLogin.get(e.getPlayer().getUniqueId().toString()));
 		}

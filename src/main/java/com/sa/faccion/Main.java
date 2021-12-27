@@ -16,8 +16,6 @@ import com.sa.events.EventsPeaceAgreement;
 import com.sa.events.EventsPowerLevel;
 import com.sa.events.EventsSession;
 
-import net.kyori.adventure.text.Component;
-
 public class Main extends JavaPlugin{
 	
 	private HashMap<String, PlayerObject> players = new HashMap<String, PlayerObject>();
@@ -68,30 +66,12 @@ public class Main extends JavaPlugin{
 		return str == null || str.replace(" ", "").length() == 0;
 	}
 	
-	@SuppressWarnings("deprecation") 
 	public static ItemStack getItem(Material material, String name) {
 		ItemStack item = new ItemStack(material, 1);
 		ItemMeta meta = item.getItemMeta();
-		if(Main.isPaper()) {
-			meta.displayName(Component.text(name.replace("&", "§")));	
-		}else {
-			meta.setDisplayName(name.replace("&", "§"));
-		}
-		
+		meta.setDisplayName(name.replace("&", "§"));	
 		item.setItemMeta(meta);
 		return item;
-	}
-	
-	public static boolean isPaper() {
-		boolean isPaper = false;
-		try {
-		    Class.forName("com.destroystokyo.paper.ParticleBuilder");
-		    isPaper = true;
-		} catch (ClassNotFoundException ignored) {
-			
-		}
-		
-		return isPaper;
 	}
 	
 }

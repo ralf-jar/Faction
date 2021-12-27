@@ -20,21 +20,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sa.entitys.FactionObject;
 import com.sa.entitys.PlayerObject;
 import com.sa.faccion.Chat;
-
-import net.kyori.adventure.text.Component;
+import com.sa.faccion.Main;
 
 public class EventsCash implements Listener {
 
 
 	private HashMap<String, String> parameters;
 	private HashMap<String, PlayerObject> players;
-	private HashMap<String, FactionObject> factions;
 	private HashMap<String, String> messages;
 	
 	public EventsCash(HashMap<String, PlayerObject> players, HashMap<String, FactionObject> factions, HashMap<String, String> parameters, HashMap<String, String> messages) {
 		this.parameters = parameters;
 		this.players = players;
-		this.factions = factions;
 		this.messages = messages;
 	}
 	
@@ -52,18 +49,19 @@ public class EventsCash implements Listener {
 				ItemStack itemReward = new ItemStack(Material.EMERALD, 1);
 				
 				ItemMeta metaCash = itemCash.getItemMeta();
-				metaCash.displayName(Component.text("&6SA Cash"));
+				metaCash.setDisplayName("&6SA Cash");
 				itemCash.setItemMeta(metaCash);
 				
 				ItemMeta metaReward = itemReward.getItemMeta();
-				metaReward.displayName(Component.text("&7[&4Lord of Damage&7]"));
+				metaReward.setDisplayName("&7[&4Lord of Damage&7]");
+				
 				itemReward.setItemMeta(metaReward);
 				itemReward.addEnchantment(Enchantment.DAMAGE_ALL, 10);
 				
 				MerchantRecipe merchRec = new MerchantRecipe(item, 1);
 				merchRec.addIngredient(new ItemStack(Material.NETHERITE_INGOT,1));
 				merchRec.addIngredient(itemCash);
-				merchRec.adjust(itemReward);
+				//merchRec.adjust(itemReward);
 
 				WanderingTrader trader = (WanderingTrader) player.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
 				trader.setRecipe(0, merchRec);
