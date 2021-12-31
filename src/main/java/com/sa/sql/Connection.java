@@ -12,10 +12,10 @@ public class Connection {
 		try {  
 			Class.forName("com.mysql.cj.jdbc.Driver");  
 			
-			String host = "mysql.mcprohosting.com";
-			String user = "server_1020914";
-			String security ="VhBsQ6W71vuA$R*zd";
-			String database = "server_1020914_11dc71f5";
+			String host = "localhost";
+			String user = "root";
+			String security ="password";
+			String database = "faction";
 			
 			Statement connection = DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, user, security).createStatement();  
 			return connection;
