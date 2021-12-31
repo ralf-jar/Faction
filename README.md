@@ -5,8 +5,8 @@
 Objetivos:
 
 • Facciones
-✓ 1. Inicialmente con un máximo de 3 usuarios por facción, se podrá aumentar la cantidad de miembros según el flujo de usuarios en el servidor.
-✓ 2. No permite el PVP entre miembros de la misma facción.
+  1. ✓ Inicialmente con un máximo de 3 usuarios por facción, se podrá aumentar la cantidad de miembros según el flujo de usuarios en el servidor.
+  2. ✓ No permite el PVP entre miembros de la misma facción.
   3. Se permite el envió de SA Cash entre facciones.
   4. Entrar en Modo Traslado activa el PVP de toda la facción.
   5. El Nivel de Poder de la facción es la suma de Nivel de Poder entre los integrantes de la facción.
@@ -14,21 +14,21 @@ Objetivos:
 
 
 • Tratados de Paz
-✓ 1. Si eres asesinado por un jugador entras en modo tratado de paz.
-✓ 2. Otros usuarios no pueden hacerte daño a menos de que tú les ataques primero durante un tratado de paz.
-✓ 3. Los tratados de paz tienen una duración proporcional al Nivel de Poder, en donde a mayor nivel menor duración.
-✓ 4. Entrar en este modo te entrega una brújula (no traspasable) que te lleva a un radio de 50 bloques del usuario que te asesino.
-✓ 5. Cobrar Venganza durante el tratado de paz no otorga la brújula a ninguno de los jugadores/facciones de la batalla.
+  1. ✓ Si eres asesinado por un jugador entras en modo tratado de paz.
+  2. ✓ Otros usuarios no pueden hacerte daño a menos de que tú les ataques primero durante un tratado de paz.
+  3. ✓ Los tratados de paz tienen una duración proporcional al Nivel de Poder, en donde a mayor nivel menor duración.
+  4. ✓ Entrar en este modo te entrega una brújula (no traspasable) que te lleva a un radio de 50 bloques del usuario que te asesino.
+  5. ✓ Cobrar Venganza durante el tratado de paz no otorga la brújula a ninguno de los jugadores/facciones de la batalla.
 
 
 • Nivel de Poder
-✓ 1. El Nivel de Poder se calcula a partir del poder de arcos, espadas, materiales de armaduras, manzanas doradas, Enderchest y pociones que se tengan en el inventario, a partir del set con la suma más alta de puntos a la vez.
-✓ 2. Este nivel define que jugadores puedes pelear entre sí, para llevar un PVP de forma más equilibrada.
+  1. ✓ El Nivel de Poder se calcula a partir del poder de arcos, espadas, materiales de armaduras, manzanas doradas, Enderchest y pociones que se tengan en el inventario, a partir del set con la suma más alta de puntos a la vez.
+  2. ✓ Este nivel define que jugadores puedes pelear entre sí, para llevar un PVP de forma más equilibrada.
   3. Este nivel permite que usuarios de un nivel inferior puedan iniciar una pelea contra usuarios de niveles superiores, mas no de forma inversa.
   4. Ganar batallas entre usuarios de niveles de poder superior permite ganar más SA Cash.
   5. Los primeros niveles de poder no otorgan SA Cash, para evitar el Smurf Farm.
   6. El aldeano Errante ofrece mejores artículos a mayor Nivel de Poder que posea el jugador.
-✓ 7. El daño ocasionado por los mobs aumenta proporcional al Nivel de Poder.
+  7. ✓ El daño ocasionado por los mobs aumenta proporcional al Nivel de Poder.
   8. La suma de nivel de poder por facción permite proteger áreas mas grandes, por lo que las áreas de protecciones de zonas son dinámicas.
 
 
@@ -55,11 +55,11 @@ Objetivos:
   6. Durante los primeros rangos del Nivel de Poder existirá un radio de 2 bloque del centro de la protección con protección de cofres, una vez superado estos rangos de poder desaparecerá estas protecciones y no se volverán a activar, aunque se vuelvan a los primeros rangos de Nivel de Poder.
 
 • Sesiones
-✓ 1. El usuario requiere registrarse con una contraseña
-✓ 2. El usuario requiere iniciar sesión con una contraseña
-✓ 3. El usuario puede cambiar su contraseña
-✓ 4. El usuario no requiere iniciar sesión con una contraseña si usa la misma Direccion MAC. 
-✓ 5. Sesión segura, durante el inicio de sesión el jugador no recibe daño ni efectos, ni puede modificar su entorno o inventario.
+  1. ✓ El usuario requiere registrarse con una contraseña
+  2. ✓ El usuario requiere iniciar sesión con una contraseña
+  3. ✓ El usuario puede cambiar su contraseña
+  4. ✓ El usuario no requiere iniciar sesión con una contraseña si usa la misma Direccion MAC. 
+  5. ✓ Sesión segura, durante el inicio de sesión el jugador no recibe daño ni efectos, ni puede modificar su entorno o inventario.
 
 • Penalizaciones
   1. Morir seis veces en un día evitara el acceso al servidor hasta el siguiente día.
